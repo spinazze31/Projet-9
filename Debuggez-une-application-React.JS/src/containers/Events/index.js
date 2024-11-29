@@ -14,12 +14,14 @@ const EventList = () => {
   const [type, setType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredEvents = (data?.events || []).filter(
-    (event, index) =>
-      (event.type === type || type === null) &&
-      (currentPage - 1) * PER_PAGE <= index &&
-      index < currentPage * PER_PAGE
-  );
+  const events = data?.events || [];
+  const startIndex = (currentPage - 1) * PER_PAGE;
+  const endIndex = currentPage * PER_PAGE;
+
+  const filteredEvents =
+    type === null ? events : events.filter((event) => event.type === type);
+
+  const paginatedEvents = filteredEvents.slice(startIndex, endIndex);
 
   const changeType = (evtType) => {
     setCurrentPage(1);
@@ -42,19 +44,23 @@ const EventList = () => {
             onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
-            {filteredEvents.map((event) => (
-              <Modal key={event.id} Content={<ModalEvent event={event} />}>
-                {({ setIsOpened }) => (
-                  <EventCard
-                    onClick={() => setIsOpened(true)}
-                    imageSrc={event.cover}
-                    title={event.title}
-                    date={new Date(event.date)}
-                    label={event.type}
-                  />
-                )}
-              </Modal>
-            ))}
+            {paginatedEvents.map(
+              (
+                event // modification filteredEvents en paginatedEvents
+              ) => (
+                <Modal key={event.id} Content={<ModalEvent event={event} />}>
+                  {({ setIsOpened }) => (
+                    <EventCard
+                      onClick={() => setIsOpened(true)}
+                      imageSrc={event.cover}
+                      title={event.title}
+                      date={new Date(event.date)}
+                      label={event.type}
+                    />
+                  )}
+                </Modal>
+              )
+            )}
           </div>
           <div className="Pagination">
             {[...Array(pageNumber || 0)].map((_, n) => (

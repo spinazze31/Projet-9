@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
@@ -13,8 +14,9 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { data } = useData();
-  console.log(data);
+  const { last } = useData();
+  const [loading, setLoading] = useState(true);
+
   return (
     <>
       <header>
@@ -33,23 +35,23 @@ const Page = () => {
               Une soirée d’entreprise vous permet de réunir vos équipes pour un
               moment convivial afin de valoriser votre société en projetant une
               image dynamique. Nous vous proposons d’organiser pour vous vos
-              diners et soirée d’entreprise
+              dîners et soirées d’entreprise.
             </ServiceCard>
             <ServiceCard imageSrc="/images/hall-expo.png">
               <h3>Conférences</h3>
-              724 events vous propose d’organiser votre évènement, quelle que
-              soit sa taille, en s’adaptant à votre demande et à vos demandes.
-              En tant que spécialistes de l’évènementiel, nous saurons trouver
-              le lieu parfait ainsi que des solutions inédites pour capter votre
-              audience et faire de cet évènement un succès
+              724 events vous propose d’organiser votre événement, quelle que
+              soit sa taille, en s’adaptant à votre demande. En tant que
+              spécialistes de l’événementiel, nous saurons trouver le lieu
+              parfait ainsi que des solutions inédites pour capter votre
+              audience et faire de cet événement un succès.
             </ServiceCard>
             <ServiceCard imageSrc="/images/sophia-sideri-LFXMtUuAKK8-unsplash1.png">
-              <h3>Experience digitale</h3>
+              <h3>Expérience digitale</h3>
               Notre agence experte en contenus immersifs offre des services de
-              conseil aux entreprises, pour l’utilisation de la réalité
-              virtuelle, de la réalité augmentée et de la réalité mixte de
-              l’animation événementielle, à la veille technologique jusqu’au
-              développement de module de formation innovant
+              conseil aux entreprises pour l’utilisation de la réalité
+              virtuelle, de la réalité augmentée et de la réalité mixte, de
+              l’animation événementielle à la veille technologique, jusqu’au
+              développement de modules de formation innovants.
             </ServiceCard>
           </div>
         </section>
@@ -59,7 +61,7 @@ const Page = () => {
         </section>
         <section className="PeoplesContainer">
           <h2 className="Title">Notre équipe</h2>
-          <p>Une équipe d’experts dédiés à l’ogranisation de vos événements</p>
+          <p>Une équipe d’experts dédiée à l’organisation de vos événements</p>
           <div className="ListContainer">
             <PeopleCard
               imageSrc="/images/stephanie-liverani-Zz5LQe-VSMY-unsplash.png"
@@ -68,7 +70,7 @@ const Page = () => {
             />
             <PeopleCard
               imageSrc="/images/linkedin-sales-solutions-pAtA8xe_iVM-unsplash.png"
-              name="Jean-baptiste"
+              name="Jean-Baptiste"
               position="Directeur marketing"
             />
             <PeopleCard
@@ -100,8 +102,8 @@ const Page = () => {
               <div className="ModalMessage--success">
                 <div>Message envoyé !</div>
                 <p>
-                  Merci pour votre message nous tâcherons de vous répondre dans
-                  les plus brefs délais
+                  Merci pour votre message, nous tâcherons de vous répondre dans
+                  les plus brefs délais.
                 </p>
               </div>
             }
@@ -115,24 +117,17 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre dernière prestation</h3>
-          {data && data.length > 0 ? (
-            () => {
-              const sortedData = data.sort(
-                (a, b) => new Date(b.date) - new Date(a.date)
-              );
-              const latestEvent = sortedData[0]; // Récupère le dernier événement
-              return (
-                <EventCard
-                  imageSrc={latestEvent.cover}
-                  title={latestEvent.title}
-                  date={new Date(latestEvent.date)}
-                  small
-                  label="boom"
-                />
-              );
-            }
+          {!last ? (
+            loading
           ) : (
-            <p>erreur</p>
+            <EventCard
+              imageSrc={last?.cover}
+              title={last?.title}
+              date={new Date(last?.date)}
+              small
+              label="boom"
+              onChange={() => setLoading(false)}
+            />
           )}
         </div>
         <div className="col contact">
@@ -159,9 +154,9 @@ const Page = () => {
           <Logo size="large" />
           <p>
             Une agence événementielle propose des prestations de service
-            spécialisées dans la conception et l&apos;organisation de divers
+            spécialisées dans la conception et l’organisation de divers
             événements tels que des événements festifs, des manifestations
-            sportives et culturelles, des événements professionnels
+            sportives et culturelles, des événements professionnels.
           </p>
         </div>
       </footer>

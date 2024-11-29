@@ -18,10 +18,9 @@ const Select = ({
   const changeValue = (newValue) => {
     onChange(newValue);
     setValue(newValue);
-    setCollapsed(newValue);
+    setCollapsed(true); // Change la valeur de collapsed pour fermer la modale
   };
-  console.log(value);
-  console.log(titleEmpty);
+
   return (
     <div className={`SelectContainer ${type}`} data-testid="select-testid">
       {label && <div className="label">{label}</div>}
